@@ -1,0 +1,27 @@
+project:
+  name: quickstart-armory-spinnaker
+  shorten_stack_name: true
+  #template: templates/redis-stack.yaml
+  template: templates/pb-new-vpc-bastion-eks.yaml
+  parameters:
+    KeyPairName: --overridden--
+    RemoteAccessCIDR: 73.17.237.141/32
+    QSS3BucketName: $[taskcat_autobucket]
+    QSS3BucketRegion: $[taskcat_current_region]
+    QSS3KeyPrefix: quickstart-armory-spinnaker/
+  lambda_source_path: functions/source
+  lambda_zip_path: functions/packages
+  s3_bucket: ''
+tests:
+    deploy-in-2az-with-defaults:
+      parameters:
+        AvailabilityZones: $[taskcat_genaz_2]
+        NumberOfAZs: 2
+        EKSPublicAccessEndpoint: Enabled
+        ProvisionBastionHost: Enabled
+        DBUserPassword: --overriden--
+        DBName: spinnaker
+        RotateDBPassword: false
+        KubeClusterName: PB-EKS-Cluster
+      regions:
+      - us-east-1
